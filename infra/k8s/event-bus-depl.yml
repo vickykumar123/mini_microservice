@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: event-bus-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: event-bus # which pods are needs to managed
+  template:
+    metadata:
+      labels: # matchLabels created here, we can use any name instead of app.
+        app: event-bus
+    spec:
+      containers:
+        - name: event-bus
+          image: vivvk/event-bus:latest
+          imagePullPolicy: Never
+--- # for multiple objects
+apiVersion: v1
+kind: Service
+metadata:
+  name: event-bus-srv
+spec:
+  selector:
+    app: event-bus
+  ports:
+    - name: event-bus
+      protocol: TCP
+      port: 4005
+      targetPort: 4005

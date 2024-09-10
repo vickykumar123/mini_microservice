@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comments-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: comments # which pods are needs to managed
+  template:
+    metadata:
+      labels: # matchLabels created here, we can use any name instead of app.
+        app: comments
+    spec:
+      containers:
+        - name: comments
+          image: vivvk/comments:latest
+          imagePullPolicy: Never
+--- # for multiple objects
+apiVersion: v1
+kind: Service
+metadata:
+  name: comments-srv
+spec:
+  selector:
+    app: comments
+  ports:
+    - name: comments
+      protocol: TCP
+      port: 4000
+      targetPort: 4000
